@@ -75,6 +75,7 @@ builder.Services.AddScoped<IRepository<int, EventParticipant>, EventParticipantR
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IParticipantService, ParticipantService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IEventParticipant, EventParticipantService>();
 
 
 var app = builder.Build();

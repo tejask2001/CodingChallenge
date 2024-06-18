@@ -12,10 +12,12 @@ namespace CodingChallenge.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IParticipantService _participantService;
         private readonly ILogger<UserController> _logger;
-        public UserController(IUserService userService, ILogger<UserController> logger)
+        public UserController(IUserService userService, IParticipantService participantService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _participantService = participantService;
             _logger = logger;
         }
 
@@ -57,6 +59,34 @@ namespace CodingChallenge.Controllers
             try
             {
                 return await _userService.AddUser(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("AddParticipant")]
+        public async Task<ActionResult<Participant>> AddParticipant(AddParticipantDTO addParticipantDTO)
+        {
+            try
+            {
+                User user = new User();
+                user.UserName=addParticipantDTO.UserName;
+                user.Password=addParticipantDTO.Password;
+                user.Email=addParticipantDTO.Email;
+
+                var addedUser = await _userService.AddUser(user);
+
+                Participant participant = new Participant();
+                participant.Name=addParticipantDTO.Name;
+                participant.Phone=addParticipantDTO.Phone;
+                participant.Age=addParticipantDTO.Age;
+                participant.UserId=addedUser.UserId;
+
+                return await _participantService.AddUser(participant);
             }
             catch (Exception ex)
             {

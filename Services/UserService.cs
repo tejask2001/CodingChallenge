@@ -63,6 +63,7 @@ namespace CodingChallenge.Services
             {
                 users.Email = user.Email;
                 users.Password = user.Password;
+                users.isEventOrginizer= user.isEventOrginizer;
                 return await _userRepository.Update(users);
             }
             throw new NoSuchUserException();

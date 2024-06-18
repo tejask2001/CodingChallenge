@@ -11,11 +11,13 @@ namespace CodingChallenge.Controllers
     public class EventController : ControllerBase
     {
         private readonly IEventService _eventService;
+        private readonly IEventParticipant _eventParticipant;
         private readonly ILogger<EventController> _logger;
-        public EventController(IEventService eventService, ILogger<EventController> logger)
+        public EventController(IEventService eventService, ILogger<EventController> logger, IEventParticipant eventParticipant)
         {
             _eventService = eventService;
             _logger = logger;
+            _eventParticipant = eventParticipant;
         }
 
         [HttpGet]
@@ -56,6 +58,21 @@ namespace CodingChallenge.Controllers
             try
             {
                 return await _eventService.AddEvent(events);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("AddEventParticipant")]
+        public async Task<ActionResult<EventParticipant>> AddEventParticipant(EventParticipant eventParticipant)
+        {
+            try
+            {
+                return await _eventParticipant.AddEventParticipant(eventParticipant.EventId, eventParticipant.ParticipantId);
             }
             catch (Exception ex)
             {
